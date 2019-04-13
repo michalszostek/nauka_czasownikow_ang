@@ -22,7 +22,6 @@ while (!feof($file)) {
 
     $query = 'INSERT INTO `verbs`(`infinitive`, `tense`, `participle`, `polish`) VALUES (:a, :b, :c, :d)';
     $query = $conn->prepare($query);
-    var_dump($query);
     $query->execute(array(
         ':a' => $verb[0],
         ':b' => $verb[1],

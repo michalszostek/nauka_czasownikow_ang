@@ -1,25 +1,87 @@
 <?php
 
-$servername = 'localhost';
-$dbname = 'verbs';
-$username = 'root';
-$password = '';
+class Main {
 
-try {
-    $conn = new PDO("mysql:host=$servername;dbname=" . $dbname, $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conn->exec("SET CHARACTER SET utf8");
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    public function __construct()
+    {
+        $servername = 'localhost';
+        $dbname = 'verbs';
+        $username = 'root';
+        $password = '';
+
+        try {
+            $this->conn = new PDO("mysql:host=$servername;dbname=" . $dbname, $username, $password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->exec("SET CHARACTER SET utf8");
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+    }
+
+    public function max_ID()
+    {
+        $sql = 'SELECT max(id) FROM verbs';
+        $query = $this->conn->prepare($sql);
+        $query->execute();
+        $row = $query->fetch(PDO::FETCH_NUM);
+        return (int)$row[0];
+    }
+
+    public function start_test()
+    {
+        
+    }
+
+    public function end_test()
+    {
+        $query = 'TRUNCATE `session`';
+        $query = $this->conn->prepare($query);
+        $query->execute();
+    }
+    
+    public function select_verb($id)
+    {
+
+    }
+
+    public function rand_numbers()
+    {
+        $numbers = array();
+        $maxID = $this->max_ID();
+        $count = 0;
+
+        for ($i = 1; $i <= 10; $i++) {
+            do {
+                $numb = rand(1, $maxID);
+                $flag = true;
+
+                for ($j = 1; $j <= $count; $j++) {
+                    if ($numb == $numbers[$j]) $flag = false;
+                }
+
+                if ($flag == true) {
+                    $count++;
+                    $numbers[$count] = $numb;
+                }
+            } while ($flag != true);
+        }
+
+        $id = 1;
+        foreach ($numbers as $numb) {
+            $query = 'INSERT INTO `session`(`id`, `verb`) VALUES (:a, :b)';
+            $query = $this->conn->prepare($query);
+            $query->execute(array(
+                ':a' => $id,
+                ':b' => $numb,
+            ));
+            $id += 1;
+        }
+    }
+
 }
 
 
-function rand_verb($conn)
-{
-    $id = rand(1, 3);
-    $verb = select_verb($conn, $id);
-    return $verb;
-}
+
 
 
 function select_verb($conn, $id)
@@ -43,30 +105,4 @@ function max_ID($conn)
 
 
 
-var_dump(max_ID($conn));
-// var_dump($maxID);
-// $ile_wylosowac = 2;
-// $ile_juz_wylosowano = 0;
 
-// for ($i = 1; $i <= $ile_wylosowac; $i++) {
-//     do {
-//         $liczba = rand(1, $maxID);
-//         $losowanie_ok = true;
-
-//         for ($j = 1; $j <= $ile_juz_wylosowano; $j++) {
-
-//             if ($liczba == $wylosowane[$j]) $losowanie_ok = false;
-//         }
-
-//         if ($losowanie_ok == true) {
-//             $ile_juz_wylosowano++;
-//             $wylosowane[$ile_juz_wylosowano] = $liczba;
-//         }
-//     } while ($losowanie_ok != true);
-// }
-
-// // ZOBACZ REZULTATY LOSOWANIA
-// echo "Wylosowane numery: ";
-// for ($i = 1; $i <= $ile_wylosowac; $i++) {
-//     echo $wylosowane[$i] . " ";
-// }
