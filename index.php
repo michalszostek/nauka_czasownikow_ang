@@ -4,6 +4,15 @@ require_once 'app.php';
 
 $a = new Main();
 
+$answers = array(
+    'infinitive' => 'know',
+    'tense' => 'knew',
+    'participle' => 'known'
+);
+
+echo $a->start_test();
+
+
 ?>
 
 
