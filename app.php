@@ -29,26 +29,27 @@ class Main
         return (int)$row[0];
     }
 
-    public function start_test()
+    public function start_program()
     {
         $this->end_test();
         $this->rand_numbers();
-        $question = 0;
+        self::$_ROUND = 1;
+    }
 
+    public function start_test()
+    {
+    //dodać jakieś next_word czy cosw tym stylu.
+           do {
+                $verb = $this->select_verb(self::$_ROUND);
+                echo $verb[4];
+                echo $this->get_answers();
 
-        //dodać zmienną globalną która zlicza posunięcia, ewnetualnie dodawać index/1 , index/2
-        // for ($i=1; $i <= 10; $i++) { 
-            $verb = $this->select_verb(self::$_ROUND);
-            echo $verb[4];
-            echo $this->get_answers();
-            $question+=1;
-        // }
-
-
-        if ($question == 10) {
-            $this->sum();
-            $this->end_test();
-        }
+           } while (self::$_ROUND == 10);
+            
+           echo "koniec";
+           echo '<alert>KOniec</alert>';
+            // $this->sum();
+            // $this->end_test();
     }
 
     public function select_verb($id)
@@ -87,6 +88,8 @@ class Main
             ':c' => $answers['participle'],
             ':d' => $id
         ));
+
+        self::$_ROUND++;
     }
 
     public function check_in_form($verb_id, $answers)
@@ -110,6 +113,8 @@ class Main
         } else {
             echo 'Źle! Podałeś: ' . $answers['participle'] . ' zamiast: ' . $verb[3] . '<br>';
         }
+
+        echo '<a href="index.php">Kolejne słowo</a>';
     }
 
     public function sum()

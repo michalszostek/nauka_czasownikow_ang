@@ -14,5 +14,4 @@ if ($_POST['infinitive'] && $_POST['tense'] && $_POST['participle']) {
     $a->check_in_form($a::$_ROUND, $answers);
     $a->update_answers($a::$_ROUND, $answers);
 
-
 }
