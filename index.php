@@ -9,9 +9,9 @@ $a = new Main();
 //     'tense' => 'knew',
 //     'participle' => 'known'
 // );
+$a->start_test();
 
-echo $a->start_test();
-
+$a->test_test();
 
 ?>
 

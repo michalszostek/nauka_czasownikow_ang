@@ -2,10 +2,12 @@
 
 class Main
 {
-    public static $_ROUND = 1;
+    public static $_ROUND;
 
     public function __construct()
     {
+        self::$_ROUND = 10;
+
         $servername = 'localhost';
         $dbname = 'verbs';
         $username = 'root';
@@ -38,18 +40,14 @@ class Main
 
     public function start_test()
     {
-    //dodać jakieś next_word czy cosw tym stylu.
-           do {
-                $verb = $this->select_verb(self::$_ROUND);
-                echo $verb[4];
-                echo $this->get_answers();
+        //dodać jakieś next_word czy cosw tym stylu.
+        $verb = $this->select_verb(self::$_ROUND);
+        echo $verb[4];
+        echo $this->get_answers();
 
-           } while (self::$_ROUND == 10);
-            
-           echo "koniec";
-           echo '<alert>KOniec</alert>';
-            // $this->sum();
-            // $this->end_test();
+
+        // $this->sum();
+        // $this->end_test();
     }
 
     public function select_verb($id)
@@ -70,12 +68,29 @@ class Main
 
     public function get_answers()
     {
-        return ('<form action="test.php" method="post" autocomplete="off">
+        return ('<form action="" method="post" autocomplete="off">
                 <input type="text" name="infinitive">
                 <input type="text" name="tense">
                 <input type="text" name="participle">
                 <input type="submit">
                 </form>');
+    }
+
+    public function test_test()
+    {
+        if ($_POST['infinitive'] && $_POST['tense'] && $_POST['participle']) {
+
+            $answers = array(
+                'infinitive' => $_POST['infinitive'],
+                'tense' => $_POST['tense'],
+                'participle' => $_POST['participle']
+            );
+
+            $this->check_in_form(self::$_ROUND, $answers);
+            $this->update_answers(self::$_ROUND, $answers);
+
+            self::$_ROUND += 1;
+        }
     }
 
     public function update_answers($id, $answers)
@@ -88,8 +103,6 @@ class Main
             ':c' => $answers['participle'],
             ':d' => $id
         ));
-
-        self::$_ROUND++;
     }
 
     public function check_in_form($verb_id, $answers)
