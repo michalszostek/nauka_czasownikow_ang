@@ -1,47 +1,75 @@
 <?php
 include_once('verbs.php');
+include_once('templates/header.php');
+$_SESSION['round'] = 0;
 ?>
+<h2 class="mt-3">Podsumowanie</h2>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Pol</th>
+            <th scope="col">Infinitive</th>
+            <th scope="col">Past tense</th>
+            <th scope="col">Past participle</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $points = 0;
+        //check
+        for ($i = 1; $i <= $GLOBALS['NUMBER_OF_ROUNDS']; $i++) {
+            echo '<tr>';
+            $sql = 'SELECT * FROM round WHERE id = :id';
+            $query = $conn->prepare($sql);
+            $query->execute(array(':id' => $i));
+            $round_verbs = $query->fetch(PDO::FETCH_NUM);
 
-<!DOCTYPE html>
-<html lang="en">
+            $sql = 'SELECT * FROM verbs WHERE id = :id';
+            $query = $conn->prepare($sql);
+            $query->execute(array(':id' => $round_verbs[1]));
+            $verbs = $query->fetch(PDO::FETCH_NUM);
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
+            echo '<th scope="row">';
+            echo $round_verbs[1];
+            echo '</th>';
 
-<body>
-    <h2>Podsumowanie</h2>
+            echo '<th scope="row">';
+            echo $round_verbs[5];
+            echo '</th>';
 
-    <?php
-    $_SESSION['round'] = 0;
-    echo '<h3>x/' . $GLOBALS['NUMBER_OF_ROUNDS'] . '</h3>';
+            if ($round_verbs[2] === $verbs[1]) {
+                $points++;
+                echo '<td>' . $round_verbs[2] . '</td>';
+            } else {
+                echo '<td>' . $round_verbs[2] . ' / ' . $verbs[1] . '</td>';
+            }
 
-    foreach ($round as $verb) {
-        foreach ($verb as $form => $value) {
-            echo $form . ': ' . $value . '<br>';
+            if ($round_verbs[3] === $verbs[2]) {
+                $points++;
+                echo '<td>' . $round_verbs[3] . '</td>';
+            } else {
+                echo '<td>' . $round_verbs[3] . ' / ' . $verbs[2] . '</td>';
+            }
+
+            if ($round_verbs[4] === $verbs[3]) {
+                $points++;
+                echo '<td>' . $round_verbs[4] . '</td>';
+            } else {
+                echo '<td>' . $round_verbs[4] . ' / ' . $verbs[3] . '</td>';
+            }
+            echo '</tr>';
         }
-        echo '<br>';
-    }
+        ?>
 
-    var_dump($given_verb);
+    </tbody>
+</table>
 
-    // foreach ($given_verb as $verb) {
-    //     foreach ($verb as $form => $value) {
-    //         echo $form . ': ' . $value . '<br>';
-    //     }
-    //     echo '<br>';
-    // }
+<?= '<h3>You scored: ' . $points . '/' . ($GLOBALS['NUMBER_OF_ROUNDS'] * 3) . ' points</h3>'; ?>
 
-
-    ?>
-
-    <form action="new_round.php" method="get">
-        <input type="submit" value="new round">
-    </form>
-</body>
-
-</html>
+<form action="new_round.php" method="get">
+    <input type="submit" value="new round">
+</form>
+<?php
+include_once 'templates/footer.php';

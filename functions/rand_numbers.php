@@ -40,11 +40,12 @@ foreach ($numbers as $numb) {
 
     var_dump($verb);
 
-    $query = 'INSERT INTO `round`(`id`, `polish`) VALUES (:a, :b)';
+    $query = 'INSERT INTO `round`(`id`, `id_in_verbs`, `polish`) VALUES (:a, :b, :c)';
     $query = $conn->prepare($query);
     $query->execute(array(
         ':a' => $id,
-        ':b' => $verb[4],
+        ':b' => $numb,
+        ':c' => $verb[4],
     ));
     $id += 1;
 }
