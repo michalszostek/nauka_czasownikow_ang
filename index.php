@@ -5,9 +5,6 @@ if (!isset($_SESSION['round'])) {
     $_SESSION['round'] = 0;
 }
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,13 +18,12 @@ if (!isset($_SESSION['round'])) {
 <body>
     <?php
 
-    if ($_SESSION['round'] === $GLOBALS['NUMBER_OF_ROUNDS']) {
+    if ($_SESSION['round'] >= $GLOBALS['NUMBER_OF_ROUNDS']) {
         header('Location: summary_round.php');
     }
-
-    echo ($round[$_SESSION['round']]['polish']) . '<br>';
-
+    echo ($round[$_SESSION['round']][4]) . '<br>';
     echo $_SESSION['round']++;
+    
     ?>
 
     <form action="previous.php" method="get">

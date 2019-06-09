@@ -1,11 +1,16 @@
 <?php
 include_once('verbs.php');
+include_once('db_conn.php');
 
-$given_verb[$_SESSION['round']]['infinitive'] = $_GET['infinitive'];
-$given_verb[$_SESSION['round']]['tense'] = $_GET['tense'];
-$given_verb[$_SESSION['round']]['participle'] = $_GET['participle'];
+$id = $_SESSION['round'];
+$id++;
 
-
-
-// var_dump($given_verb[$_SESSION['round']]);
+$query = 'UPDATE `round` SET `infinitive`= :a,`tense`=:b,`participle`=:c WHERE id = :d';
+$query = $conn->prepare($query);
+$query->execute(array(
+    ':a' => $_GET['infinitive'],
+    ':b' => $_GET['tense'],
+    ':c' => $_GET['participle'],
+    ':d' => $id
+));
 header("Location: index.php");
